@@ -1,0 +1,65 @@
+<div class="template-list"
+  style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 24px;">
+  
+  <h2>Templates</h2>
+  <button mat-raised-button color="primary" (click)="create()">Create Template</button>
+
+  <div class="cards" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 16px;">
+    <mat-card *ngFor="let t of templates" class="template-card" style="width: 300px; background-color: lightgreen;">
+      <mat-card-title>{{ t.name }}</mat-card-title>
+      <mat-card-actions style="display: flex; justify-content: space-around;">
+        <button mat-button style="background-color: yellow; color: black;" (click)="rename(t)">Rename</button>
+        <button mat-button style="background-color: red; color: white;" (click)="delete(t.id)">Delete</button>
+        <button mat-button style="background-color: blue; color: white;" (click)="view(t.id)">View</button>
+        <button mat-button style="background-color: white; color: black;" (click)="edit(t.id)">Edit</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <div *ngIf="selectedTemplate" class="template-details" style="margin-top: 24px; max-width: 600px;">
+    <h3>{{ selectedTemplate.name }}</h3>
+
+    <!-- Content -->
+    <p *ngIf="selectedTemplate.content" style="display: flex; gap: 8px; align-items: center">
+      <strong>Content:</strong>
+      <span [innerHTML]="selectedTemplate.content"></span>
+    </p>
+
+    <!-- Dynamic fields -->
+    <p *ngFor="let field of dynamicFields" style="display: flex; gap: 8px; align-items: center;">
+      <strong>{{ field.label }}:</strong>
+      <span *ngIf="selectedTemplate[field.key] !== null && selectedTemplate[field.key] !== undefined; else noValue">
+
+        <!-- Attachments -->
+        <ng-container *ngIf="field.key === 'attachments'">
+          <a *ngIf="selectedTemplate[field.key]?.url" [href]="selectedTemplate[field.key]?.url" target="_blank">
+            {{ selectedTemplate[field.key]?.name || '' }}
+          </a>
+          <span *ngIf="!selectedTemplate[field.key]?.url">
+            {{ selectedTemplate[field.key]?.name || '' }}
+          </span>
+        </ng-container>
+
+        <!-- Array fields (tags) -->
+        <ng-container *ngIf="field.isArray && field.key !== 'attachments'">
+          <span *ngFor="let item of selectedTemplate[field.key]; let i = index">
+            {{ item }}<span *ngIf="i < selectedTemplate[field.key].length - 1">, </span>
+          </span>
+        </ng-container>
+
+        <!-- Boolean fields (status) -->
+        <ng-container *ngIf="field.isBoolean && field.key !== 'attachments'">
+          {{ selectedTemplate[field.key] ? 'Active' : 'Inactive' }}
+        </ng-container>
+
+        <!-- Normal fields -->
+        <ng-container *ngIf="!field.isArray && !field.isBoolean && field.key !== 'attachments'">
+          {{ selectedTemplate[field.key] }}
+        </ng-container>
+
+      </span>
+      <ng-template #noValue></ng-template>
+    </p>
+
+  </div>
+</div>

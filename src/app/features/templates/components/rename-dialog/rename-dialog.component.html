@@ -1,0 +1,11 @@
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+  <h2 style="margin-bottom: 16px;">Rename Template</h2>
+  <mat-form-field appearance="fill" style="width: 100%; max-width: 400px;">
+    <mat-label>New Template Name</mat-label>
+    <input matInput [(ngModel)]="name" placeholder="Enter new name">
+  </mat-form-field>
+  <div style="display: flex; justify-content: space-between; margin-top: 16px; width: 100%; max-width: 400px;">
+    <button mat-raised-button color="primary" style="flex: 1; margin-right: 8px;" (click)="save()">Save</button>
+    <button mat-raised-button color="warn" style="flex: 1;" (click)="close()">Cancel</button>
+  </div>
+</div>

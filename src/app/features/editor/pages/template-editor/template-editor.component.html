@@ -1,0 +1,137 @@
+<div class="template-editor-container">
+  <mat-card class="editor-card">
+
+    <mat-card-title style="text-align: center;">Edit Template</mat-card-title>
+
+    <mat-card-content>
+      <div *ngIf="loading">Loading template data...</div>
+
+      <div class="form-preview-wrapper" *ngIf="!loading">
+
+        <form [formGroup]="templateForm" (ngSubmit)="save()" class="editor-form">
+
+          <!-- Template Name -->
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Template Name</mat-label>
+            <input matInput formControlName="name" />
+            <mat-error *ngIf="templateForm.get('name')?.invalid">Required</mat-error>
+          </mat-form-field>
+
+          <!-- Rich Text Editor -->
+           <mat-label>Template Content</mat-label>
+          <app-rich-text-editor [content]="templateForm.get('content')?.value"
+            (contentChange)="templateForm.get('content')?.setValue($event)">
+          </app-rich-text-editor>
+          <mat-error *ngIf="templateForm.get('content')?.invalid && templateForm.get('content')?.touched">
+            Template Content is required
+          </mat-error>
+
+
+          <!-- Inline fields -->
+          <div class="inline-row">
+            <mat-form-field appearance="fill">
+              <mat-label>Client Name</mat-label>
+              <input matInput formControlName="clientName" />
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Contract Date</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="contractDate" />
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error *ngIf="templateForm.get('contractDate')?.hasError('pastDate')">
+                Date cannot be in the past
+              </mat-error>
+
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Contract Type</mat-label>
+              <mat-select formControlName="contractType">
+                <mat-option value="NDA">NDA</mat-option>
+                <mat-option value="Service">Service</mat-option>
+                <mat-option value="Sales">Sales</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <!-- Tags (multiselect) -->
+          <mat-form-field appearance="fill">
+            <mat-label>Tags</mat-label>
+            <mat-select formControlName="tags" multiple>
+              <mat-option *ngFor="let tag of availableTags" [value]="tag">{{ tag }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Checkbox -->
+          <mat-checkbox formControlName="isActive">Active</mat-checkbox>
+
+          <!-- File Upload -->
+          <div class="file-upload">
+            <input type="file" (change)="uploadFile($event)" />
+            <div class="uploaded-msg" *ngIf="uploadedFile">
+              Uploaded:
+              <a [href]="uploadedFile.url" target="_blank">{{ uploadedFile.name }}</a>
+            </div>
+          </div>
+
+          <!-- Buttons -->
+          <div class="actions">
+            <button mat-raised-button color="primary" type="submit">Save</button>
+            <button mat-raised-button color="accent" type="button" (click)="togglePreview()">Preview</button>
+            <button mat-raised-button color="warn" type="button" (click)="goBack()">Go Back</button>
+          </div>
+
+        </form>
+
+        <!-- Preview -->
+        <mat-card *ngIf="previewMode" #previewSection class="preview-card">
+          <mat-card-title style="text-align: center;">Preview</mat-card-title>
+          <mat-card-content>
+            
+            <!-- Variable Input Section -->
+            <div class="variable-inputs" *ngIf="getPreviewVariables().length > 0">
+              <h3>Template Variables</h3>
+              <div class="variables-grid">
+                <mat-form-field appearance="fill" *ngFor="let variable of getPreviewVariables()">
+                  <mat-label>{{ variable }}</mat-label>
+                  <input 
+                    matInput 
+                    [value]="previewVariables.get(variable)" 
+                    (input)="onVariableChange(variable, $any($event.target).value)">
+                </mat-form-field>
+              </div>
+            </div>
+
+            <mat-divider *ngIf="getPreviewVariables().length > 0" style="margin: 20px 0;"></mat-divider>
+
+            <!-- Template Details -->
+            <p><strong>Name:</strong> {{ templateForm.value.name }}</p>
+            <p><strong>Content: </strong> <span [innerHTML]="renderedPreviewContent"></span></p>
+            <p><strong>Client:</strong> {{ templateForm.value.clientName }}</p>
+            <p><strong>Date:</strong> {{ templateForm.value.contractDate | date }}</p>
+            <p><strong>Type:</strong> {{ templateForm.value.contractType }}</p>
+
+            <!-- Tags -->
+            <p *ngIf="templateForm.value.tags?.length">
+              <strong>Tags:</strong> {{ templateForm.value.tags.join(', ') }}
+            </p>
+
+            <!-- Checkbox -->
+            <p>
+              <strong>Status:</strong> {{ templateForm.value.isActive ? 'Active' : 'Inactive' }}
+            </p>
+
+            <!-- Attachments -->
+            <p *ngIf="templateForm.value.attachments">
+              <strong>File:</strong>
+              <a [href]="templateForm.value.attachments.url" target="_blank">{{ templateForm.value.attachments.name
+                }}</a>
+            </p>
+          </mat-card-content>
+        </mat-card>
+
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
