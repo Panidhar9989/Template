@@ -1,4 +1,4 @@
-// src/app/app.routes.ts
+
 import { Route } from '@angular/router';
 import { TemplateListComponent } from './features/templates/pages/template-list/template-list.component';
 import { TemplateEditorComponent } from './features/editor/pages/template-editor/template-editor.component';

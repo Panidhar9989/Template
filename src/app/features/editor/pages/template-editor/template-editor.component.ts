@@ -172,7 +172,7 @@ export class TemplateEditorComponent implements OnInit {
 
   getPreviewVariables(): string[] {
   const content = this.templateForm.get('content')?.value || '';
-  const regex = /\{\{\s*([^}]+)\s*\}\}/g; // supports spaces
+  const regex = /\{\{\s*([^}]+)\s*\}\}/g; 
   const matches: string[] = [];
   let match;
 

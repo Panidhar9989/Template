@@ -134,7 +134,7 @@ export class RichTextEditorComponent implements AfterViewInit {
     this.emitContent();
   }
 
-  // ✅ NEW: Font color
+  
   setColor(event: Event) {
     const color = (event.target as HTMLInputElement).value;
     this.editorRef.nativeElement.focus();
