@@ -190,24 +190,24 @@ export class TemplateEditorComponent implements OnInit {
   }
 
   get renderedPreviewContent(): string {
-    let content = this.templateForm.get('content')?.value || '';
+  let content = this.templateForm.get('content')?.value || '';
 
-    const formValueMap: Record<string, any> = {
-      'Client Name': this.templateForm.get('clientName')?.value,
-      'Contract Date': this.templateForm.get('contractDate')?.value
-        ? new Date(this.templateForm.get('contractDate')?.value).toDateString()
-        : '',
-      'Contract Type': this.templateForm.get('contractType')?.value
-    };
+  const autoValues: Record<string, string> = {
+    'Client Name': this.templateForm.get('clientName')?.value || '',
+    'Contract Date': this.templateForm.get('contractDate')?.value
+      ? new Date(this.templateForm.get('contractDate')?.value).toDateString()
+      : ''
+  };
 
-    // Replace {{ Client Name }} etc automatically
-    content = content.replace(/\{\{\s*([^}]+)\s*\}\}/g, (fullMatch: string, capturedKey: string) => {
-      // First check preview variables, then fall back to form values
-      return this.previewVariables.get(capturedKey) ?? formValueMap[capturedKey] ?? '';
-    });
+  Object.keys(autoValues).forEach(key => {
+    content = content.replace(
+      new RegExp(`{{\\s*${key}\\s*}}`, 'g'),
+      autoValues[key]
+    );
+  });
 
-    return content;
-  }
+  return content;
+}
 
-  
+
 }

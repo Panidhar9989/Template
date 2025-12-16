@@ -89,21 +89,7 @@
           <mat-card-title style="text-align: center;">Preview</mat-card-title>
           <mat-card-content>
             
-            <!-- Variable Input Section -->
-            <div class="variable-inputs" *ngIf="getPreviewVariables().length > 0">
-              <h3>Template Variables</h3>
-              <div class="variables-grid">
-                <mat-form-field appearance="fill" *ngFor="let variable of getPreviewVariables()">
-                  <mat-label>{{ variable }}</mat-label>
-                  <input 
-                    matInput 
-                    [value]="previewVariables.get(variable)" 
-                    (input)="onVariableChange(variable, $any($event.target).value)">
-                </mat-form-field>
-              </div>
-            </div>
-
-            <mat-divider *ngIf="getPreviewVariables().length > 0" style="margin: 20px 0;"></mat-divider>
+           
 
             <!-- Template Details -->
             <p><strong>Name:</strong> {{ templateForm.value.name }}</p>

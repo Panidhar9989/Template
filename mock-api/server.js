@@ -32,7 +32,7 @@ let templates = [
     attachments: null,
     tags: ["Important"],
     isActive: false,
-  }
+  },
 ];
 
 /**
